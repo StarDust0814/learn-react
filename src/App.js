@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import './index.css';
 // 项目的根组件
 // App -> index.js -> public/index.html项目渲染逻辑
@@ -47,6 +47,20 @@ function App() {
     setForm({ ...form, age: 25 });
   };
 
+  // 绑定受控表单步骤
+  // 1. 绑定表单的受控变量 value
+  // 2. 绑定表单的更新方法 setValue
+  const [value, setValue] = useState('');
+
+  // react获取DOM
+  // 1. useRef生成一个ref对象，通过标签的ref属性绑定
+  // 2. 当DOM可用时，通过ref.current获取
+  // 可用代表只有当DOM渲染完毕后，才能获取
+  const inputRef = useRef(null);
+
+  const showDom = () => {
+    console.dir(inputRef.current);
+  };
   return (
     <div className="App">
       this is App
@@ -74,6 +88,19 @@ function App() {
       <button onClick={changeForm}>修改form{form.age}</button>
       {/* 引入外部css */}
       <span className="foo">this is class name</span>
+      {/* 受控表单绑定 */}
+      <br></br>
+      <div>
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          type="text"
+        />
+      </div>
+      {/* 获取DOM */}
+      <br></br>
+      <input type="text" ref={inputRef} />
+      <button onClick={showDom}>获取DOM</button>
     </div>
   );
 }
