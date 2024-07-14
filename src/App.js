@@ -49,6 +49,21 @@ function Son1({ onGetMsg }) {
   );
 }
 
+// 兄弟组件传递参数 A -> B
+function AComponent({ onGetAName }) {
+  const name = 'this is A name';
+  return (
+    <div>
+      this is A component<br></br>
+      <button onClick={() => onGetAName(name)}>send</button>
+    </div>
+  );
+}
+
+function BComponent({ name }) {
+  return <div>this is B component, {name}</div>;
+}
+
 function App() {
   // 事件绑定
   const handleClick = (e) => {
@@ -95,6 +110,14 @@ function App() {
   const getMsg = (msg) => {
     console.log(msg);
     setMsg(msg);
+  };
+
+  // 兄弟组件传递参数
+  const [componentName, setComponentName] = useState('');
+
+  const getAName = (componentName) => {
+    console.log(componentName);
+    setComponentName(componentName);
   };
   return (
     <div className="App">
@@ -143,6 +166,11 @@ function App() {
       {/* 子组件向父组件传递参数 */}
       <Son1 onGetMsg={getMsg} />
       <div>this is parent component, the msg from son: {msg}</div>
+      {/* 兄弟组件传递参数，通过状态提升 */}
+      <br></br>
+      <AComponent onGetAName={getAName}></AComponent>
+      <BComponent name={componentName}></BComponent>
+      {/* 跨层级组件传参 */}
     </div>
   );
 }
