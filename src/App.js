@@ -24,6 +24,12 @@ const MyButton2 = () => {
   return <button>自定义组件2</button>;
 };
 
+// 父子组件通信
+function Son(props) {
+  console.log(props);
+  return <div>this is son, {props.name}</div>;
+}
+
 function App() {
   // 事件绑定
   const handleClick = (e) => {
@@ -61,6 +67,8 @@ function App() {
   const showDom = () => {
     console.dir(inputRef.current);
   };
+
+  const name = 'from father component';
   return (
     <div className="App">
       this is App
@@ -101,6 +109,8 @@ function App() {
       <br></br>
       <input type="text" ref={inputRef} />
       <button onClick={showDom}>获取DOM</button>
+      {/* 父组件向子组件传递参数 */}
+      <Son name={name} />
     </div>
   );
 }
