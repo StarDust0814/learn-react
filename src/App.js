@@ -1,4 +1,4 @@
-import { useState, useRef, useContext, createContext } from 'react';
+import { useState, useRef, useContext, createContext, useEffect } from 'react';
 import './index.css';
 // 项目的根组件
 // App -> index.js -> public/index.html项目渲染逻辑
@@ -141,6 +141,20 @@ function App() {
   // Context跨级传参
   const msgContextValue = 'this is context value';
 
+  // useEffect处理由渲染完成后触发的效果
+  // 第二个参数 [] 为空，代表只会触发一次
+  const URL = 'http://geek.itheima.net/v1_0/channels';
+  const [list, setList] = useState([]);
+  useEffect(() => {
+    async function getList() {
+      const res = await fetch(URL);
+      const jsonRes = await res.json();
+      console.log(jsonRes);
+      setList(jsonRes.data.channels);
+    }
+    getList();
+  }, []);
+
   return (
     <div className="App">
       this is App
@@ -197,6 +211,12 @@ function App() {
         this is context top,
         <A />
       </MsgContext.Provider>
+      {/* useEffect触发 */}
+      <ul>
+        {list.map((item) => (
+          <li key={item.id}>{item.name}</li>
+        ))}
+      </ul>
     </div>
   );
 }
