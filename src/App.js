@@ -82,6 +82,32 @@ function B() {
   return <div>this is B component, {msg}</div>;
 }
 
+// 清除副作用
+function TimerComponent() {
+  useEffect(() => {
+    const timer = setInterval(() => {
+      console.log('定时器执行中...');
+    }, 100);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+  return <div>this is timer component</div>;
+}
+
+// 自定义hook
+function useToggle() {
+  const [value, setValue] = useState(true);
+
+  const toggle = () => setValue(!value);
+
+  return {
+    value,
+    toggle,
+  };
+}
+
 function App() {
   // 事件绑定
   const handleClick = (e) => {
@@ -155,9 +181,20 @@ function App() {
     getList();
   }, []);
 
+  // 清除副作用
+  const [show, setShow] = useState(true);
+  // 自定义hook
+  const { value: showValue, toggle } = useToggle();
+  console.log('showValue ', showValue);
   return (
     <div className="App">
       this is App
+      {/* 封装通用逻辑使用自定义Hook */}
+      <br></br>
+      <div>
+        {showValue && <div>this is use hook</div>}
+        <button onClick={toggle}>toggle</button>
+      </div>
       {/* 可以识别引号、JS变量、函数和方法调用、JS对象 */}
       {'this is message'}
       {count}
@@ -183,22 +220,22 @@ function App() {
       {/* 引入外部css */}
       <span className="foo">this is class name</span>
       {/* 受控表单绑定 */}
-      <br></br>
+      {/* <br></br>
       <div>
         <input
           value={value}
           onChange={(e) => setValue(e.target.value)}
           type="text"
         />
-      </div>
+      </div> */}
       {/* 获取DOM */}
       <br></br>
       <input type="text" ref={inputRef} />
       <button onClick={showDom}>获取DOM</button>
       {/* 父组件向子组件传递参数 */}
-      <Son name={name}>
+      {/* <Son name={name}>
         <span>这是通过父组件引入子组件内嵌的数据</span>
-      </Son>
+      </Son> */}
       {/* 子组件向父组件传递参数 */}
       <Son1 onGetMsg={getMsg} />
       <div>this is parent component, the msg from son: {msg}</div>
@@ -217,6 +254,11 @@ function App() {
           <li key={item.id}>{item.name}</li>
         ))}
       </ul>
+      {/* 清除副作用 */}
+      <div>
+        {show && TimerComponent}
+        <button onClick={() => setShow(false)}>卸载timer组件</button>
+      </div>
     </div>
   );
 }
