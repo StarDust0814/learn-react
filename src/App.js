@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext, createContext } from 'react';
 import './index.css';
 // 项目的根组件
 // App -> index.js -> public/index.html项目渲染逻辑
@@ -64,6 +64,24 @@ function BComponent({ name }) {
   return <div>this is B component, {name}</div>;
 }
 
+// 跨层级组件传参，使用 context
+// 在顶层组组件使用Provider提供数据
+// 在底层通过useContext钩子函数使用数据
+const MsgContext = createContext();
+function A() {
+  return (
+    <div>
+      this is A component
+      <B />
+    </div>
+  );
+}
+
+function B() {
+  const msg = useContext(MsgContext);
+  return <div>this is B component, {msg}</div>;
+}
+
 function App() {
   // 事件绑定
   const handleClick = (e) => {
@@ -119,6 +137,10 @@ function App() {
     console.log(componentName);
     setComponentName(componentName);
   };
+
+  // Context跨级传参
+  const msgContextValue = 'this is context value';
+
   return (
     <div className="App">
       this is App
@@ -171,6 +193,10 @@ function App() {
       <AComponent onGetAName={getAName}></AComponent>
       <BComponent name={componentName}></BComponent>
       {/* 跨层级组件传参 */}
+      <MsgContext.Provider value={msgContextValue}>
+        this is context top,
+        <A />
+      </MsgContext.Provider>
     </div>
   );
 }
