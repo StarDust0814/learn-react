@@ -27,7 +27,26 @@ const MyButton2 = () => {
 // 父子组件通信
 function Son(props) {
   console.log(props);
-  return <div>this is son, {props.name}</div>;
+  return (
+    <div>
+      this is son, {props.name}
+      <div>
+        通过子组件嵌套在父组件时内嵌的所有内容，都会被视为父组件传递到子组件的数据children{' '}
+        {props.children}
+      </div>
+    </div>
+  );
+}
+
+function Son1({ onGetMsg }) {
+  const sonMsg = 'this is the msg from son';
+  return (
+    <div>
+      this is Son
+      <br></br>
+      <button onClick={() => onGetMsg(sonMsg)}>sendMsg</button>
+    </div>
+  );
 }
 
 function App() {
@@ -69,6 +88,14 @@ function App() {
   };
 
   const name = 'from father component';
+
+  // 子组件传递参数给父组件，实际上就是子组件调用父组件的函数并传递实参
+  const [msg, setMsg] = useState('');
+
+  const getMsg = (msg) => {
+    console.log(msg);
+    setMsg(msg);
+  };
   return (
     <div className="App">
       this is App
@@ -110,7 +137,12 @@ function App() {
       <input type="text" ref={inputRef} />
       <button onClick={showDom}>获取DOM</button>
       {/* 父组件向子组件传递参数 */}
-      <Son name={name} />
+      <Son name={name}>
+        <span>这是通过父组件引入子组件内嵌的数据</span>
+      </Son>
+      {/* 子组件向父组件传递参数 */}
+      <Son1 onGetMsg={getMsg} />
+      <div>this is parent component, the msg from son: {msg}</div>
     </div>
   );
 }
