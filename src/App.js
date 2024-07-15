@@ -1,5 +1,7 @@
 import { useState, useRef, useContext, createContext, useEffect } from 'react';
 import './index.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { increment, decrement, addToNum } from './store/modules/counterStore';
 // 项目的根组件
 // App -> index.js -> public/index.html项目渲染逻辑
 // jSX高频场景
@@ -186,6 +188,10 @@ function App() {
   // 自定义hook
   const { value: showValue, toggle } = useToggle();
   console.log('showValue ', showValue);
+  // 引入redux并使用状态管理
+  const { reduxCount } = useSelector((state) => state.counter);
+  const dispatch = useDispatch();
+
   return (
     <div className="App">
       this is App
@@ -259,6 +265,12 @@ function App() {
         {show && TimerComponent}
         <button onClick={() => setShow(false)}>卸载timer组件</button>
       </div>
+      {/* 引入redux */}
+      <br></br>
+      <button onClick={() => dispatch(decrement())}>-</button>
+      {reduxCount}
+      <button onClick={() => dispatch(increment())}>+</button>
+      <button onClick={() => dispatch(addToNum(10))}>add To 10</button>
     </div>
   );
 }
