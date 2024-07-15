@@ -2,6 +2,8 @@ import { useState, useRef, useContext, createContext, useEffect } from 'react';
 import './index.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { increment, decrement, addToNum } from './store/modules/counterStore';
+
+import { fetchChannelList } from './store/modules/channelStore';
 // 项目的根组件
 // App -> index.js -> public/index.html项目渲染逻辑
 // jSX高频场景
@@ -192,6 +194,13 @@ function App() {
   const { reduxCount } = useSelector((state) => state.counter);
   const dispatch = useDispatch();
 
+  // redux异步处理请求并更新
+  const { channelList } = useSelector((state) => state.channel);
+  // 视图的更新时机：当触发dispatch将action传递到reducer后触发视图渲染
+  useEffect(() => {
+    dispatch(fetchChannelList());
+  }, [dispatch]);
+
   return (
     <div className="App">
       this is App
@@ -271,6 +280,13 @@ function App() {
       {reduxCount}
       <button onClick={() => dispatch(increment())}>+</button>
       <button onClick={() => dispatch(addToNum(10))}>add To 10</button>
+      {/*  redux异步请求更新状态视图渲染 */}
+      <br></br>
+      <ul>
+        {channelList.map((item) => (
+          <li key={item.id}>{item.name}</li>
+        ))}
+      </ul>
     </div>
   );
 }
